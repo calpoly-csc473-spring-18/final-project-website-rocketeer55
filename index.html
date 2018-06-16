@@ -1,0 +1,195 @@
+<html>
+<head>
+  <title>CSC 473 Final Project</title>
+
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: white;
+      color: #333333;
+      -webkit-font-smoothing: antialiased;
+      font-size: 16px;
+      font-family: "Source Sans Pro", Helvetica;
+    }
+
+    img {
+      display: block;
+    }
+
+    em {
+      font-size: 12px;
+    }
+
+    #signature {
+      margin-left: 30px;
+      font-style: oblique;
+    }
+
+    a:link,
+    a:visited {
+      color: #165788;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus,
+    a:active {
+      text-decoration: underline;
+    }
+
+    .wrapper {
+      width: 660px;
+      margin: auto;
+    }
+
+    .container {
+      width: 660px;
+      margin: auto;
+    }
+
+    #content {
+      width: 650px;
+      margin: 70px auto 0px auto;
+    }
+
+    #content article {
+      margin-bottom: 150px;
+    }
+
+    #content h1,
+    #content h2 {
+      color: black;
+      margin-bottom: 30px;
+      font-weight: 200;
+      font-size: 48px;
+    }
+
+    #content h3 {
+      color: black;
+      border-bottom: 1px solid black;
+      text-transform: uppercase;
+      margin: 30px 0px 30px 0px;
+      font-size: 28px;
+      font-weight: 200;
+    }
+
+    #content p {
+      width: 100%;
+      line-height: 150%;
+      margin-bottom: 20px;
+    }
+
+    #content p:first-child {
+      font-size: 18px;
+      font-style: italic;
+      letter-spacing: 2px;
+    }
+
+    #content p:first-child:first-line {
+        font-weight: bold;
+    }
+  
+    #content ul {
+        padding-left:25px
+    }
+
+    pre {
+      font-size: 10px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #ddd;
+    }
+  </style>
+</head>
+
+<body><div class="wrapper"><section id="content">
+
+<h1>CSC 473 FINAL PROJECT</h1>
+
+<h4>Spencer Schurk - Spring 2018 - Ian Dunn</h4>
+
+<article> <!-- This adds padding at the top and bottom -->
+
+
+
+
+<h3>High Resolution Raytraced Animations</h3>
+
+<p><center>
+    <img src="thumbnail.png" width="100%">
+    <em>This screenshot is taken from the first frame of Scene 1 (see below).</em>
+</center></p>
+
+<p><a href="https://github.com/calpoly-csc473-spring-18/raytracer-rocketeer55">Github Link</a></p>
+
+<p>For my 473 final project, I chose to create three high resolution, high frame rate, raytraced scenes. These scenes were rendered on my desktop in 4k (3840 x 2160) 60fps.</p>
+
+
+<h4>Why I Chose my Final Project Idea</h4>
+
+<p>I chose High Resolution Raytraced Animations because I wanted to:
+  <ul>
+    <li>Explore the limits of my computer's hardware</li>
+    <li>Produce something that visually highlights raytracing's benefits over traditional rendering techniques</li>
+  </ul>
+</p>
+
+<p>Going into this final project, I knew most of my time spent was going to be getting the scenes looking right, and waiting for renders to complete. To speed up this process, I knew I needed to implement multi-threading support into my raytracer. Originally I split the threads into rendering different pixels for the same frame of the animation, but I found that having each thread rendering a seperate frame decreased overall completion time for a scene.</p>
+
+
+<h4>Resources Used</h4>
+
+<p>To implement my final project, I didn't really use any external resources.</p>
+
+<p>I modified Professor Ian Dunn's multi-threaded code he provided to the class to have each thread render a seperate frame instead of a seperate pixel of the same frame.</p>
+
+<p>The physical animations were based off of simple sin and cos functions (scene 1), simple kinematics equations I learned from 474 (Computer Animation taught by Christian Eckhardt) (scene 2), and simply moving the camera in the negative z direction (scene 3).</p>
+
+<p>To convert the output .png files into a video, I used <a href="https://www.blender.org/">Blender's</a> video sequence editor and h.264 encoder, set to a bitrate of 65000kbps (needs to be high for 4k 60fps). I chose my settings by just messing around in Blender until the output video looked about right.</p>
+
+
+<h4>Software Design Implementation</h4>
+
+<p>For my software design implementation, I backtraced through my code and removed redundant functions, unused variables, and commented-out print statements that haven't been used since the early stages of developing this program. Additionally, I consider the multi-threaded approach a new Software Design Implementation, as it's not necessary for my final project, but extremely useful to speed up rendering times. I also implemented copy constructors for all objects, and for scenes (which hold the objects and other scene informaiton).</p>
+
+<h4>Other Thoughts and Comments</h4>
+
+<p>Since I had different frames rendering on seperate threads when the -threads flag is set, the frames of my animation are no longer rendered sequentially. Therefore, I couldn't simply modify objects in a scene based on their previous position. Instead, the position for each object has to be calculated from the initial scene positions, based on the current frame. This means (for some scenes) I needed to loop through all previous frames until the current frame, and increment the objects position per frame. Then I store these positions in a new copy of the original scene, and render a frame based on the copy. For the three scenes I rendered for this final project, this process isn't overly computationally expensive, although for longer and more complex scenes, I could see this being an issue.</p>
+
+
+<h3>Scene 1</h3>
+
+<p>Scene 1 involves a light source orbiting around a sphere in the center of a room. I thought the shadows produced look interesting, and this scene can be looped infinitely since the ending position is 1 frame away from the initial position.</p>
+
+<p>I rendered this scene with the command "./raytrace scene_1 ../resources/final_scene_1.pov 3840 2160 -threads 12"</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Zv_WpVO17zw?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+<h3>Scene 2</h3>
+
+<p>Scene 2 involves a red sphere being affected by gravity, and having a slight negative x initial velocity. When the sphere hits the floor, it bounces back upwards with a slightly lower velocity, causing it to not bounce as high.</p>
+
+<p>I rendered this scene with the command "./raytrace scene_2 ../resources/final_scene_2.pov 3840 2160 -threads 12 -ss=2"</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/r8AeDB4mtH0?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+<h3>Scene 3</h3>
+
+<p>Scene 3 depicts a camera moving forwards in a hallway with blue and red lights. These lights are generated in my code, instead of being present in the .pov file. There is a variable in Globals.h which can be edited to change the number of lights in the scene (more lights = slower rendering).</p>
+
+<p>I rendered this scene with the command "./raytrace scene_3 ../resources/final_scene_3.pov 3840 2160 -threads 12"</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xOq6kjXYFsg?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+<p></p><p>The .pov files for these scenes are included in the Github repo available <a href="https://github.com/calpoly-csc473-spring-18/raytracer-rocketeer55">Here</a>
+
+
+</article></section></div></body></html>
